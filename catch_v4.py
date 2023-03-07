@@ -186,14 +186,14 @@ if __name__ == '__main__':
                 corner_list.append([corn1, corn2, corn3, corn4])
 
                 if lucky_list[j] == 2:
-                    l = 15/1000
-                    w = 15/1000
+                    l = 16/1000
+                    w = 16/1000
                 if lucky_list[j] == 3:
-                    l = 23/1000
-                    w = 15/1000
+                    l = 24/1000
+                    w = 16/1000
                 if lucky_list[j] == 4:
-                    l = 33/1000
-                    w = 15/1000
+                    l = 32/1000
+                    w = 16/1000
 
                 corns = corner_list[j]
 
@@ -259,7 +259,7 @@ if __name__ == '__main__':
         # obj_list = np.concatenate([label2[0], label2[1], label2[2]])
 
         # print(label)
-        np.savetxt("Dataset/label/yolo_label/img%s.txt" %epoch, label,fmt='%.8s')
+        np.savetxt("Dataset/yolo_label/img%s.txt" %epoch, label,fmt='%.8s')
 
 
         # np.savetxt("Dataset/obj_16_label/img%s.txt" % epoch, label, fmt='%.10s')
@@ -326,41 +326,41 @@ if __name__ == '__main__':
             count_item += 1
 
         '''
-        # for k in range(num_item):
-        #
-        #     corns = corner_list[k]
-        #     corns = np.asarray(corns)
-        #     # print(corns.shape)
-        #     col_offset = 320
-        #     row_offset = (0.16-(0.3112-0.16))*mm2px+2
-        #
-        #     col_list = [int(mm2px*corns[0][1]+col_offset), int(mm2px*corns[3][1]+col_offset), int(mm2px*corns[1][1]+col_offset), int(mm2px*corns[2][1]+col_offset)]
-        #     row_list = [int(mm2px*corns[0][0]-row_offset), int(mm2px*corns[3][0]-row_offset), int(mm2px*corns[1][0]-row_offset), int(mm2px*corns[2][0]-row_offset)]
-        #     col_list = np.sort(col_list)
-        #     row_list = np.sort(row_list)
-        #     col_list[3] = col_list[3] + 3
-        #     col_list[0] = col_list[0] - 3
-        #
-        #     row_list[3] = row_list[3] + 3
-        #     row_list[0] = row_list[0] - 3
-        #
-        #     print(col_list)
-        #     print(row_list)
-        #     img = cv2.line(img, (col_list[0], row_list[0]), (col_list[0], row_list[3]), (255, 0, 0), 1)
-        #     img = cv2.line(img, (col_list[0], row_list[0]), (col_list[3], row_list[0]), (255, 0, 0), 1)
-        #     img = cv2.line(img, (col_list[3], row_list[3]), (col_list[3], row_list[0]), (255, 0, 0), 1)
-        #     img = cv2.line(img, (col_list[3], row_list[3]), (col_list[0], row_list[3]), (255, 0, 0), 1)
+        for k in range(num_item):
+
+            corns = corner_list[k]
+            corns = np.asarray(corns)
+            # print(corns.shape)
+            col_offset = 320
+            row_offset = (0.16-(0.3112-0.16))*mm2px+2
+
+            col_list = [int(mm2px*corns[0][1]+col_offset), int(mm2px*corns[3][1]+col_offset), int(mm2px*corns[1][1]+col_offset), int(mm2px*corns[2][1]+col_offset)]
+            row_list = [int(mm2px*corns[0][0]-row_offset), int(mm2px*corns[3][0]-row_offset), int(mm2px*corns[1][0]-row_offset), int(mm2px*corns[2][0]-row_offset)]
+            col_list = np.sort(col_list)
+            row_list = np.sort(row_list)
+            col_list[3] = col_list[3] + 3
+            col_list[0] = col_list[0] - 3
+
+            row_list[3] = row_list[3] + 3
+            row_list[0] = row_list[0] - 3
+
+            print(col_list)
+            print(row_list)
+            img = cv2.line(img, (col_list[0], row_list[0]), (col_list[0], row_list[3]), (255, 0, 0), 1)
+            img = cv2.line(img, (col_list[0], row_list[0]), (col_list[3], row_list[0]), (255, 0, 0), 1)
+            img = cv2.line(img, (col_list[3], row_list[3]), (col_list[3], row_list[0]), (255, 0, 0), 1)
+            img = cv2.line(img, (col_list[3], row_list[3]), (col_list[0], row_list[3]), (255, 0, 0), 1)
         # 11/13 comment
-        #     img = cv2.line(img, (25, 455), (615, 455), (255, 0, 0), 26)
-        #     img = cv2.line(img, (25, 455), (25, 0), (255, 0, 0), 26)
-        #     img = cv2.line(img, (615, 0), (615, 455), (255, 0, 0), 26)
-        #     img = cv2.line(img, (20, 8), (620, 8), (255, 0, 0), 16)
-        #
-        # add = int((640 - 480) / 2)
-        # img = cv2.copyMakeBorder(img, add, add, 0, 0, cv2.BORDER_CONSTANT, None, value=0)
+            img = cv2.line(img, (25, 455), (615, 455), (255, 0, 0), 26)
+            img = cv2.line(img, (25, 455), (25, 0), (255, 0, 0), 26)
+            img = cv2.line(img, (615, 0), (615, 455), (255, 0, 0), 26)
+            img = cv2.line(img, (20, 8), (620, 8), (255, 0, 0), 16)
+
+        add = int((640 - 480) / 2)
+        img = cv2.copyMakeBorder(img, add, add, 0, 0, cv2.BORDER_CONSTANT, None, value=0)
 
         # img.save("Dataset/yolo_test/" + "img%s.png" % epoch)
-        # cv2.imwrite("Dataset/pipe_test/" + "img%s.png" % epoch, img)
+        cv2.imwrite("Dataset/pipe_test/" + "img%s.png" % epoch, img)
         # p.disconnect()
         # p.resetSimulation()
         # time.sleep(0.5)
