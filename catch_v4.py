@@ -88,15 +88,16 @@ def yolo_box(img, label):
 
         # img = img/255
         img = cv2.rectangle(img,(x_lt,y_lt),(x_rb,y_rb), color = (0,0,0), thickness = 1)
-    cv2.imshow('x',img)
-    cv2.waitKey(0)
+    # cv2.imshow('x',img)
+    # cv2.waitKey(0)
 
     return img
 
 if __name__ == '__main__':
 
 
-    p.connect(1)
+    # p.connect(1)
+    p.connect(p.DIRECT)
 
     startnum = 1000
     endnum = 5000
@@ -120,7 +121,7 @@ if __name__ == '__main__':
             # num_item = random.randint(1, 5)
             # num_item = 3
             env = Arm_env(max_step=1, is_render=False, num_objects=num_item)
-            if random.random() < 0.2:
+            if random.random() < 0.5:
                 state, rdm_pos_x, rdm_pos_y, rdm_pos_z, rdm_ori_yaw, lucky_list = env.reset_close()
             else:
                 state, rdm_pos_x, rdm_pos_y, rdm_pos_z, rdm_ori_yaw, lucky_list = env.reset()
@@ -198,7 +199,7 @@ if __name__ == '__main__':
                 corns = corner_list[j]
 
                 col_offset = 320
-                row_offset = (0.16 - (0.3112 - 0.16)) * mm2px - 12
+                row_offset = (0.16 - (0.3112 - 0.16)) * mm2px - 14
 
                 col_list = [int(mm2px * corns[0][1] + col_offset), int(mm2px * corns[3][1] + col_offset),
                             int(mm2px * corns[1][1] + col_offset), int(mm2px * corns[2][1] + col_offset)]
@@ -267,10 +268,12 @@ if __name__ == '__main__':
         # for nnn in range(1):
         lebal_list.append(element)
         my_im2 = env.get_image()
+        # print(my_im2.shape)
         add = int((640 - 480) / 2)
-        img = cv2.copyMakeBorder(my_im2, add, add, 0, 0, cv2.BORDER_CONSTANT, None, value=0)
-        # img = yolo_box(img,label)
-        cv2.imwrite("Dataset/lego_yolo/" + "IMG%s.png" % epoch, img)
+        img = cv2.copyMakeBorder(my_im2, add, add, 0, 0, cv2.BORDER_CONSTANT, value=(0, 0, 0, 255))
+        # print(img.shape)
+        img = yolo_box(img,label)
+        cv2.imwrite("Dataset/lego_yolo/" + "IMG_test%s.png" % epoch, img)
         '''
         # time.sleep(1)
         # for _ in range(20000):
@@ -326,42 +329,44 @@ if __name__ == '__main__':
             count_item += 1
 
         '''
-        for k in range(num_item):
-
-            corns = corner_list[k]
-            corns = np.asarray(corns)
-            # print(corns.shape)
-            col_offset = 320
-            row_offset = (0.16-(0.3112-0.16))*mm2px+2
-
-            col_list = [int(mm2px*corns[0][1]+col_offset), int(mm2px*corns[3][1]+col_offset), int(mm2px*corns[1][1]+col_offset), int(mm2px*corns[2][1]+col_offset)]
-            row_list = [int(mm2px*corns[0][0]-row_offset), int(mm2px*corns[3][0]-row_offset), int(mm2px*corns[1][0]-row_offset), int(mm2px*corns[2][0]-row_offset)]
-            col_list = np.sort(col_list)
-            row_list = np.sort(row_list)
-            col_list[3] = col_list[3] + 3
-            col_list[0] = col_list[0] - 3
-
-            row_list[3] = row_list[3] + 3
-            row_list[0] = row_list[0] - 3
-
-            print(col_list)
-            print(row_list)
-            img = cv2.line(img, (col_list[0], row_list[0]), (col_list[0], row_list[3]), (255, 0, 0), 1)
-            img = cv2.line(img, (col_list[0], row_list[0]), (col_list[3], row_list[0]), (255, 0, 0), 1)
-            img = cv2.line(img, (col_list[3], row_list[3]), (col_list[3], row_list[0]), (255, 0, 0), 1)
-            img = cv2.line(img, (col_list[3], row_list[3]), (col_list[0], row_list[3]), (255, 0, 0), 1)
-        # 11/13 comment
-            img = cv2.line(img, (25, 455), (615, 455), (255, 0, 0), 26)
-            img = cv2.line(img, (25, 455), (25, 0), (255, 0, 0), 26)
-            img = cv2.line(img, (615, 0), (615, 455), (255, 0, 0), 26)
-            img = cv2.line(img, (20, 8), (620, 8), (255, 0, 0), 16)
-
-        add = int((640 - 480) / 2)
-        img = cv2.copyMakeBorder(img, add, add, 0, 0, cv2.BORDER_CONSTANT, None, value=0)
-
-        # img.save("Dataset/yolo_test/" + "img%s.png" % epoch)
-        cv2.imwrite("Dataset/pipe_test/" + "img%s.png" % epoch, img)
-        # p.disconnect()
-        # p.resetSimulation()
-        # time.sleep(0.5)
-    # np.savetxt("Dataset/label/label_27.csv", lebal_list)
+    #     for k in range(num_item):
+    #
+    #         corns = corner_list[k]
+    #         corns = np.asarray(corns)
+    #         # print(corns.shape)
+    #         col_offset = 320
+    #         # row_offset = (0.16 - (0.3112 - 0.16)) * mm2px + 2 - 80
+    #         row_offset = -80
+    #         print(row_offset)
+    #
+    #         col_list = [int(mm2px*corns[0][1]+col_offset), int(mm2px*corns[3][1]+col_offset), int(mm2px*corns[1][1]+col_offset), int(mm2px*corns[2][1]+col_offset)]
+    #         row_list = [int(mm2px*corns[0][0]-row_offset), int(mm2px*corns[3][0]-row_offset), int(mm2px*corns[1][0]-row_offset), int(mm2px*corns[2][0]-row_offset)]
+    #         col_list = np.sort(col_list)
+    #         row_list = np.sort(row_list)
+    #         col_list[3] = col_list[3] + 3
+    #         col_list[0] = col_list[0] - 3
+    #
+    #         row_list[3] = row_list[3] + 3
+    #         row_list[0] = row_list[0] - 3
+    #
+    #         # print('this is col_list', col_list)
+    #         # print('this is row_list', row_list)
+    #         img = cv2.line(img, (col_list[0], row_list[0]), (col_list[0], row_list[3]), (255, 0, 0), 1)
+    #         img = cv2.line(img, (col_list[0], row_list[0]), (col_list[3], row_list[0]), (255, 0, 0), 1)
+    #         img = cv2.line(img, (col_list[3], row_list[3]), (col_list[3], row_list[0]), (255, 0, 0), 1)
+    #         img = cv2.line(img, (col_list[3], row_list[3]), (col_list[0], row_list[3]), (255, 0, 0), 1)
+    #     # 11/13 comment
+    #     #     img = cv2.line(img, (25, 455), (615, 455), (255, 0, 0), 26)
+    #     #     img = cv2.line(img, (25, 455), (25, 0), (255, 0, 0), 26)
+    #     #     img = cv2.line(img, (615, 0), (615, 455), (255, 0, 0), 26)
+    #     #     img = cv2.line(img, (20, 8), (620, 8), (255, 0, 0), 16)
+    #
+    #     add = int((640 - 480) / 2)
+    #     # img = cv2.copyMakeBorder(img, add, add, 0, 0, cv2.BORDER_CONSTANT, None, value=(0, 0, 0, 255))
+    #
+    #     # img.save("Dataset/yolo_test/" + "img%s.png" % epoch)
+    #     cv2.imwrite("Dataset/pipe_test/" + "img%s.png" % epoch, img)
+    #     # p.disconnect()
+    #     # p.resetSimulation()
+    #     # time.sleep(0.5)
+    # # np.savetxt("Dataset/label/label_27.csv", lebal_list)
