@@ -272,7 +272,7 @@ if __name__ == '__main__':
         add = int((640 - 480) / 2)
         img = cv2.copyMakeBorder(my_im2, add, add, 0, 0, cv2.BORDER_CONSTANT, value=(0, 0, 0, 255))
         # print(img.shape)
-        img = yolo_box(img,label)
+        # img = yolo_box(img,label)
         cv2.imwrite("Dataset/lego_yolo/" + "IMG_test%s.png" % epoch, img)
         '''
         # time.sleep(1)
