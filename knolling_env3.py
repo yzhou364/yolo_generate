@@ -223,12 +223,11 @@ class Arm_env(gym.Env):
         self.observation_space = spaces.Box(low=-np.ones(19) * np.inf,
                                             high=np.ones(19) * np.inf,
                                             dtype=np.float32)
-        self.seed()
 
 
-    def seed(self, seed=None):
-        self.np_random, seed = seeding.np_random(seed)
-        return [seed]
+    # def seed(self, seed=None):
+    #     self.np_random, seed = seeding.np_random(seed)
+    #     return [seed]
 
     def reset(self):
 
@@ -380,28 +379,10 @@ class Arm_env(gym.Env):
                 p.changeVisualShape(self.obj_idx[i], -1, rgbaColor=(r1, g1, b1, 1))
 
 
-            # POS=[p.readUserDebugParameter(Debug_para[int(5+2*i)]),p.readUserDebugParameter(Debug_para[int(6+2*i)]),rdm_pos_z]
-
-            # self.obj_idx.append(p.loadURDF(os.path.join(self.urdf_path, "lego/2x%d.urdf" % lucky), basePosition=POS,
-            #                                baseOrientation=p.getQuaternionFromEuler([0,0,rdm_ori_yaw[i]]),
-            #                                flags=p.URDF_USE_SELF_COLLISION or p.URDF_USE_SELF_COLLISION_INCLUDE_PARENT))
-            # p.changeDynamics(self.obj_idx[i], -1, lateralFriction=self.friction, spinningFriction=0.02,
-            #                  rollingFriction=0.002)
-            # logger.debug(f'this is the urdf id: {self.obj_idx}')
-
-
         # ! initiate the position
-        # TBD use xyz pos to initialize robot arm (IK)
-        # initial_angle = p.calculateInverseKinematics(self.arm_id, 9, targetPosition = [0,0,0],maxNumIterations=300,
-        #                                               targetOrientation=p.getQuaternionFromEuler([0,1.57,0]))
-        # p.setJointMotorControlArray(self.arm_id, [0, 1, 2, 3, 4, 7, 8], p.POSITION_CONTROL,
-        #                             targetPositions=initial_angle,
-        #                             forces=[10] * 7)
+
         for _ in range(40):
             p.stepSimulation()
-
-        # print(p.getBasePositionAndOrientation(self.obj_idx[0]))
-        # print(p.getJointState(self.obj_idx[0], 0))
 
         return self.get_obs(), rdm_pos_x, rdm_pos_y, rdm_pos_z, rdm_ori_yaw, self.lucky_list
 
@@ -480,11 +461,7 @@ class Arm_env(gym.Env):
         # Generate the pos and orin of objects randomly.
         self.obj_idx = []
         self.lucky_list = []
-        # rdm_pos_x = [0.2, 0.19, 0.175]
-        # rdm_pos_y = [-0.1, 0.1, 0]
-        #     rdm_pos_x = np.random.uniform(self.x_low_obs * 2.2, self.x_high_obs, size =3)
-        #     rdm_pos_y = np.random.uniform(self.y_low_obs, self.y_high_obs, size = 3)
-        # dis_flag = True
+
         while True:
             # for i in range(1):
             dis_flag = True
@@ -574,28 +551,9 @@ class Arm_env(gym.Env):
             if i == 0 or i == (self.num_objects - 1):
                 p.changeVisualShape(self.obj_idx[i], -1, rgbaColor=(r1, g1, b1, 1))
 
-            # POS=[p.readUserDebugParameter(Debug_para[int(5+2*i)]),p.readUserDebugParameter(Debug_para[int(6+2*i)]),rdm_pos_z]
-
-            # self.obj_idx.append(p.loadURDF(os.path.join(self.urdf_path, "lego/2x%d.urdf" % lucky), basePosition=POS,
-            #                                baseOrientation=p.getQuaternionFromEuler([0,0,rdm_ori_yaw[i]]),
-            #                                flags=p.URDF_USE_SELF_COLLISION or p.URDF_USE_SELF_COLLISION_INCLUDE_PARENT))
-            # p.changeDynamics(self.obj_idx[i], -1, lateralFriction=self.friction, spinningFriction=0.02,
-            #                  rollingFriction=0.002)
-            # logger.debug(f'this is the urdf id: {self.obj_idx}')
-
-        # ! initiate the position
-        # TBD use xyz pos to initialize robot arm (IK)
-        # initial_angle = p.calculateInverseKinematics(self.arm_id, 9, targetPosition = [0,0,0],maxNumIterations=300,
-        #                                               targetOrientation=p.getQuaternionFromEuler([0,1.57,0]))
-        # p.setJointMotorControlArray(self.arm_id, [0, 1, 2, 3, 4, 7, 8], p.POSITION_CONTROL,
-        #                             targetPositions=initial_angle,
-        #                             forces=[10] * 7)
         for _ in range(300):
             # time.sleep(1/480)
             p.stepSimulation()
-
-        # print(p.getBasePositionAndOrientation(self.obj_idx[0]))
-        # print(p.getJointState(self.obj_idx[0], 0))
 
         return self.get_obs(), rdm_pos_x, rdm_pos_y, rdm_pos_z, rdm_ori_yaw, self.lucky_list
 
@@ -684,185 +642,6 @@ class Arm_env(gym.Env):
 
         return flag
 
-    def step(self, action):
-        # action: 4 xyzyaw + gripper [0,1]
-
-
-        # current_pos = obs[:3]# from obs
-        # current_yaw = obs[5]# from obs
-        # current_pos, current_yaw = np.asarray(current_pos), np.asarray(current_yaw)
-        # current_state = np.append(current_pos, current_yaw)
-        # action[:4] = action[:4] * self.dv + current_state
-
-        # self.act(action)
-
-        obs = self.get_obs()
-
-        # ! determine whether the distance is appropriate
-
-        r, done = self.reward_func(obs, action)
-
-        self.step_counter += 1
-        if self.step_counter >= self.max_step:
-            done = True
-        self.images = self.get_image()
-        # cv2.imshow(self.images)
-
-        (width, length, image, _, _) = p.getCameraImage(width=640,
-                                                        height=480,
-                                                        viewMatrix=self.view_matrix,
-                                                        projectionMatrix=self.projection_matrix,
-                                                        renderer=p.ER_BULLET_HARDWARE_OPENGL)
-        # image = cv2.line(image, (192, 368), (448, 368), (0, 0, 0), 1)
-        # image = cv2.line(image, (192, 112), (448, 112), (0, 0, 0), 1)
-        # image = cv2.line(image, (192, 368), (192, 112), (0, 0, 0), 1)
-        # image = cv2.line(image, (448, 368), (448, 112), (0, 0, 0), 1)
-        # cv2.imshow("image", image)
-
-
-
-        # image = cv2.line(image, (320, 0), (320, 640), (0, 255, 0), 4)
-        # image = cv2.line(image, (0, 240), (640, 240), (0, 255, 0), 4)
-        # cv2.waitKey(5)
-
-        # self.reset()
-        # print(p.getBasePositionAndOrientation(self.obj_idx[0])[0])
-        # print(p.getBasePositionAndOrientation(self.obj_idx[1])[0])
-        # print(p.getBasePositionAndOrientation(self.obj_idx[2])[0])
-
-        return obs, r, done, {}
-
-    def reward_func(self, obs, action):
-
-        x, y, z = obs[:3]
-        # cur_box_pos = obs[6:6+self.num_objects*3]
-        cur_box_pos = obs[6:(6 + 3)]
-        ee_yaw = obs[5]
-        # box_yaw = obs[5 + self.num_objects * 3 + 3]
-        obj_yaw = obs[5 + 3 + 3]
-
-        gripper_a = action[4]
-        gripper_a //= 0.5001
-
-        get_objects = None
-        if gripper_a == 1:
-            get_objects = self.gripper_control()
-        if get_objects == True:
-            test_distance = 0.03
-            test_pos = [x, y, z + test_distance]
-            ik_angle = p.calculateInverseKinematics(self.arm_id, 9, targetPosition=test_pos, maxNumIterations=2000,
-                                                targetOrientation=p.getQuaternionFromEuler([0, 1.57, action[3]]))
-            for i in [0, 2, 3]:
-                p.setJointMotorControl2(self.arm_id, i, p.POSITION_CONTROL, targetPosition=ik_angle[i], force=4.1,
-                                        maxVelocity=4.8)
-            p.setJointMotorControl2(self.arm_id, 1, p.POSITION_CONTROL, targetPosition=ik_angle[1], force=8.2,
-                                    maxVelocity=4.8)
-            p.setJointMotorControl2(self.arm_id, 4, p.POSITION_CONTROL, targetPosition=ik_angle[4], force=1.5,
-                                    maxVelocity=6.4)
-            for i in range(60):
-                # self.images = self.get_image()
-                p.stepSimulation()
-                if self.is_render:
-                    time.sleep(self.slep_t)
-
-            new_obs = self.get_obs()
-            new_box_pos = new_obs[6:6 + 3]
-            if (new_box_pos[2] - cur_box_pos[2]) > test_distance - 0.01:
-                get_objects = True
-            else:
-                get_objects = False
-                # logger.info('This "True" signal is unreal, the flag is still false!')
-                time.sleep(3)
-
-
-        ##!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        # distance = np.linalg.norm(obs[0:3] - obs[6:6+self.num_objects*3])
-        distance = np.linalg.norm(obs[:3] - obs[6:(6 + 3)])
-        # logger.debug(f'the distance between ee and box is {distance}')
-
-        boundary = bool(x < self.x_low_obs or x > self.x_high_obs
-                        or y < self.y_low_obs or y > self.y_high_obs
-                        or z < self.z_low_obs or z > self.z_high_obs)
-
-        top_decision = bool(abs(x - cur_box_pos[0]) < self.x_grasp_interval and
-                            abs(y - cur_box_pos[1]) < self.y_grasp_interval and
-                            (0.03 < z - cur_box_pos[2]) < 0.15)
-
-        grasp_decision = bool(abs(x - cur_box_pos[0]) < self.x_grasp_interval and
-                              abs(y - cur_box_pos[1]) < self.y_grasp_interval and
-                              abs(z - cur_box_pos[2]) < self.z_grasp_interval)
-
-        # elif self.step_counter > self.kMaxEpisodeSteps:
-        #     r = -0.1
-        #     logger.info('times up')
-        #     self.terminated = True
-        self.terminated = False
-
-
-        # X Y rewards
-        r = (1 - np.sum(abs(obs[:2] - cur_box_pos[:2]))) * 0.01
-        self.r += r
-
-        # r = (1 - abs(z - cur_box_pos[2] - 0.03)) * 0.1
-        # self.r += r
-
-
-        # if distance < 0.03:
-        #     r = 0.0001
-        #     self.r += r
-        #     logger.info('next to the box')
-        #     self.terminated = False
-
-        # if grasp_decision:
-        #     r = 0.01
-        #     self.r += r
-        #     logger.info('this position is appropriate to grasp, keep it!')
-        #     self.terminated = False
-
-        # if top_decision:
-        #     r = 0.001
-        #     self.r += r
-        #     logger.info('on the top of box')
-        #     self.terminated = False
-
-
-        if abs(obj_yaw - ee_yaw) < 0.05:
-            r = 0.001
-            self.r += r
-            # logger.debug('the yaw is same')
-            self.terminated = False
-
-        if get_objects == False:
-            r = -1
-            # logger.info('grasp failed, the reward is -1!')
-            self.terminated = True
-
-        elif boundary:
-            r = -1
-            # logger.info('hit the border')
-            # print(f'xyz is {x},{y},{z}')
-            self.terminated = True
-
-        elif get_objects == True:
-            r = 10
-            # logger.info('get the box, the reward is 10!')
-            # time.sleep(3)
-            self.terminated = True
-
-        # elif self.decision_flag == False:
-        #     r = -1
-        #     logger.info('it is too early to grasp')
-        #     self.terminated = True
-
-        else:
-            r = 0
-
-        self.r += r
-        if self.terminated:
-            print(f'the total reward is {self.r}')
-
-        return self.r, self.terminated
-
     def get_obs(self):
         # Get end-effector obs
         self.ee_pos = np.asarray(p.getLinkState(self.arm_id, 9)[0])
@@ -909,16 +688,6 @@ class Arm_env(gym.Env):
                                                         renderer=p.ER_BULLET_HARDWARE_OPENGL)
                                                         # lightDirection = [light_x, light_y, light_z])
 
-
-
-        # image = image[:,80:560]
-        # image = image[112:368,192:448]
-        # image = image
-        # img = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
-        # # rgb_opengl = cv2.resize(image, (256, 256))
-        # rgb_opengl = image
-        # rgbim = Image.fromarray(rgb_opengl)
-        # rgbim_no_alpha = rgbim.convert('RGB')
         rgbim_no_alpha = image
 
         return rgbim_no_alpha

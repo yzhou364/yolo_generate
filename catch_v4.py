@@ -126,35 +126,6 @@ if __name__ == '__main__':
             else:
                 state, rdm_pos_x, rdm_pos_y, rdm_pos_z, rdm_ori_yaw, lucky_list = env.reset()
 
-        # time.sleep(10)
-        # if reset_flag != True:
-        #
-        #     while True:
-        #         rdm_pos_x = np.random.uniform(env.x_low_obs * 2.2, env.x_high_obs, size=3)
-        #         rdm_pos_y = np.random.uniform(env.y_low_obs, env.y_high_obs, size=3)
-        #
-        #         dis1_2 = math.dist([rdm_pos_x[0], rdm_pos_y[0]], [rdm_pos_x[1], rdm_pos_y[1]])
-        #         dis1_3 = math.dist([rdm_pos_x[0], rdm_pos_y[0]], [rdm_pos_x[2], rdm_pos_y[2]])
-        #         dis2_3 = math.dist([rdm_pos_x[1], rdm_pos_y[1]], [rdm_pos_x[2], rdm_pos_y[2]])
-        #
-        #         if dis1_2 > 0.03 and dis1_3 > 0.03 and dis2_3 > 0.03:
-        #             break
-        #
-        #     rdm_pos_z = 0.01
-        #     rdm_ori_yaw = np.random.uniform(0, math.pi / 2, size=3)
-        #
-        #
-        #
-        #     for i in range(num_item):
-        #         # print("num",num_item)
-        #         # print(len(env.obj_idx))
-        #         # p.removeBody(env.obj_idx[i])
-        #
-        #         p.resetBasePositionAndOrientation(env.obj_idx[i], posObj=[rdm_pos_x[i],rdm_pos_y[i],0.01],
-        #                                    ornObj=p.getQuaternionFromEuler([0,0,rdm_ori_yaw[i]]))
-        #
-        #     state = env.get_obs()
-
         # self.obs = np.concatenate([self.ee_pos, self.ee_ori, self.box_pos, self.box_ori, self.joints_angle])
         #
         #                                  3             3          3*N           3*N            7
@@ -260,7 +231,7 @@ if __name__ == '__main__':
         # obj_list = np.concatenate([label2[0], label2[1], label2[2]])
 
         # print(label)
-        np.savetxt("Dataset/yolo_label/img%s.txt" %epoch, label,fmt='%.8s')
+        np.savetxt("Dataset/yolo_label_401/img%s.txt" %epoch, label,fmt='%.8s')
 
 
         # np.savetxt("Dataset/obj_16_label/img%s.txt" % epoch, label, fmt='%.10s')
@@ -273,7 +244,7 @@ if __name__ == '__main__':
         img = cv2.copyMakeBorder(my_im2, add, add, 0, 0, cv2.BORDER_CONSTANT, value=(0, 0, 0, 255))
         # print(img.shape)
         # img = yolo_box(img,label)
-        cv2.imwrite("Dataset/lego_yolo/" + "IMG_test%s.png" % epoch, img)
+        cv2.imwrite("Dataset/lego_yolo_401/" + "IMG_test%s.png" % epoch, img)
         '''
         # time.sleep(1)
         # for _ in range(20000):
@@ -329,44 +300,3 @@ if __name__ == '__main__':
             count_item += 1
 
         '''
-    #     for k in range(num_item):
-    #
-    #         corns = corner_list[k]
-    #         corns = np.asarray(corns)
-    #         # print(corns.shape)
-    #         col_offset = 320
-    #         # row_offset = (0.16 - (0.3112 - 0.16)) * mm2px + 2 - 80
-    #         row_offset = -80
-    #         print(row_offset)
-    #
-    #         col_list = [int(mm2px*corns[0][1]+col_offset), int(mm2px*corns[3][1]+col_offset), int(mm2px*corns[1][1]+col_offset), int(mm2px*corns[2][1]+col_offset)]
-    #         row_list = [int(mm2px*corns[0][0]-row_offset), int(mm2px*corns[3][0]-row_offset), int(mm2px*corns[1][0]-row_offset), int(mm2px*corns[2][0]-row_offset)]
-    #         col_list = np.sort(col_list)
-    #         row_list = np.sort(row_list)
-    #         col_list[3] = col_list[3] + 3
-    #         col_list[0] = col_list[0] - 3
-    #
-    #         row_list[3] = row_list[3] + 3
-    #         row_list[0] = row_list[0] - 3
-    #
-    #         # print('this is col_list', col_list)
-    #         # print('this is row_list', row_list)
-    #         img = cv2.line(img, (col_list[0], row_list[0]), (col_list[0], row_list[3]), (255, 0, 0), 1)
-    #         img = cv2.line(img, (col_list[0], row_list[0]), (col_list[3], row_list[0]), (255, 0, 0), 1)
-    #         img = cv2.line(img, (col_list[3], row_list[3]), (col_list[3], row_list[0]), (255, 0, 0), 1)
-    #         img = cv2.line(img, (col_list[3], row_list[3]), (col_list[0], row_list[3]), (255, 0, 0), 1)
-    #     # 11/13 comment
-    #     #     img = cv2.line(img, (25, 455), (615, 455), (255, 0, 0), 26)
-    #     #     img = cv2.line(img, (25, 455), (25, 0), (255, 0, 0), 26)
-    #     #     img = cv2.line(img, (615, 0), (615, 455), (255, 0, 0), 26)
-    #     #     img = cv2.line(img, (20, 8), (620, 8), (255, 0, 0), 16)
-    #
-    #     add = int((640 - 480) / 2)
-    #     # img = cv2.copyMakeBorder(img, add, add, 0, 0, cv2.BORDER_CONSTANT, None, value=(0, 0, 0, 255))
-    #
-    #     # img.save("Dataset/yolo_test/" + "img%s.png" % epoch)
-    #     cv2.imwrite("Dataset/pipe_test/" + "img%s.png" % epoch, img)
-    #     # p.disconnect()
-    #     # p.resetSimulation()
-    #     # time.sleep(0.5)
-    # # np.savetxt("Dataset/label/label_27.csv", lebal_list)
