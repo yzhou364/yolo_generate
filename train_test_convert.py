@@ -12,17 +12,18 @@ print(test_num)
 for i in range(train_num):
 
     cur_path = 'Dataset/lego_yolo/IMG_test%s.png' % (i+1000)
-    tar_path = 'Dataset/train_img/img%s.png' % i
+    tar_path = 'Dataset/train/images/img%s.png' % i
     shutil.copy(cur_path, tar_path)
 
     cur_path = 'Dataset/yolo_label/img%s.txt' % (i + 1000)
-    tar_path = 'Dataset/train_label/img%s.txt' % i
+    tar_path = 'Dataset/train/labels/img%s.txt' % i
     shutil.copy(cur_path, tar_path)
 
 for i in range(train_num, total_num):
     cur_path = 'Dataset/lego_yolo/IMG_test%s.png' % (i+1000)
-    tar_path = 'Dataset/test_img/img%s.png' % i
+    tar_path = 'Dataset/test/images/img%s.png' % i
     shutil.copy(cur_path, tar_path)
+
     cur_path = 'Dataset/yolo_label/img%s.txt' % (i + 1000)
-    tar_path = 'Dataset/test_label/img%s.txt' % i
+    tar_path = 'Dataset/test/labels/img%s.txt' % i
     shutil.copy(cur_path, tar_path)

@@ -342,9 +342,9 @@ class Arm_env(gym.Env):
             if dis_flag == True:
                 break
 
-        r1 = np.random.uniform(0.3, 0.7)
-        g1 = np.random.uniform(0.3, 0.7)
-        b1 = np.random.uniform(0.3, 0.7)
+        r1 = np.random.uniform(0, 0.9)
+        g1 = np.random.uniform(0, 0.9)
+        b1 = np.random.uniform(0, 0.9)
 
 
         # POS = [0.175, 0.0995, 0.05]
@@ -365,9 +365,9 @@ class Arm_env(gym.Env):
                                            baseOrientation=p.getQuaternionFromEuler([0,0,rdm_ori_yaw[i]]),useFixedBase=1,
                                            flags=p.URDF_USE_SELF_COLLISION or p.URDF_USE_SELF_COLLISION_INCLUDE_PARENT))
             #
-            r = np.random.uniform(0.3,0.7)
-            g = np.random.uniform(0.3,0.7)
-            b = np.random.uniform(0.3,0.7)
+            r = np.random.uniform(0,0.9)
+            g = np.random.uniform(0,0.9)
+            b = np.random.uniform(0,0.9)
 
 
 
@@ -539,9 +539,9 @@ class Arm_env(gym.Env):
             if dis_flag == True:
                 break
 
-        r1 = np.random.uniform(0.3, 0.7)
-        g1 = np.random.uniform(0.3, 0.7)
-        b1 = np.random.uniform(0.3, 0.7)
+        r1 = np.random.uniform(0, 0.9)
+        g1 = np.random.uniform(0, 0.9)
+        b1 = np.random.uniform(0, 0.9)
 
         # POS = [0.175, 0.0995, 0.05]
         # POS[0] = 0.175+float(input())
@@ -562,9 +562,9 @@ class Arm_env(gym.Env):
                            baseOrientation=p.getQuaternionFromEuler([0, 0, rdm_ori_yaw[i]]), useFixedBase=0,
                            flags=p.URDF_USE_SELF_COLLISION or p.URDF_USE_SELF_COLLISION_INCLUDE_PARENT))
             #
-            r = np.random.uniform(0.3, 0.7)
-            g = np.random.uniform(0.3, 0.7)
-            b = np.random.uniform(0.3, 0.7)
+            r = np.random.uniform(0, 0.9)
+            g = np.random.uniform(0, 0.9)
+            b = np.random.uniform(0, 0.9)
 
             if random.random() < 0.05:
                 p.changeVisualShape(self.obj_idx[i], -1, rgbaColor=(0.3, 0.3, 0.3, 1))
